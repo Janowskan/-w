@@ -13,10 +13,25 @@ speed = 1
 HEIGHT = 500
 WIDTH = 600
 
+
+
 # Set up Screen
 screen = turtle.Screen()
 screen.screensize(WIDTH, HEIGHT, BGCOLOR)
 screen.title("Przeprowadź żółwia przez ulicę")
+
+# draw the borders
+mypen = turtle.Turtle()
+mypen.penup()
+mypen.setposition(-450, -380)
+mypen.down()
+mypen.pensize(3)
+for side in range(4):
+    if side % 2 == 0:
+        mypen.forward(900)
+    else:
+        mypen.forward(760)
+    mypen.left(90)
 
 gracz = turtle.Turtle()
 gracz.shape("turtle")
@@ -71,3 +86,7 @@ turtle.onkey(move_right, "Right")
 while True:
     gracz.forward(speed)
 
+    if gracz.xcor() < -450 or gracz.xcor() > 450:
+        gracz.right(90)
+    if gracz.ycor() < -380 or gracz.ycor() > 380:
+        gracz.right(90)
