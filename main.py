@@ -1,16 +1,73 @@
-# This is a sample Python script.
+import turtle
+import random
+import time
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+LEVEL_INCREMENT = 1
+START_Y = -250  # Start
+FINISH_Y = 250  # End
+FONT_SIZE = 20  # Font size
+BGCOLOR = "white"
+speed = 1
+
+# set screen size
+HEIGHT = 500
+WIDTH = 600
+
+# Set up Screen
+screen = turtle.Screen()
+screen.screensize(WIDTH, HEIGHT, BGCOLOR)
+screen.title("Przeprowadź żółwia przez ulicę")
+
+gracz = turtle.Turtle()
+gracz.shape("turtle")
+gracz.color("green")
+gracz.penup()
+gracz.right(-90)
+gracz.goto(0, START_Y)
+
+# Set turtle on the starting point
+napis = turtle.Turtle()
+napis.hideturtle()
+napis.penup()
+napis.goto(-250, HEIGHT / 2 - FONT_SIZE - 5)
+napis.write("Level 1", align="right", font=("Arial", FONT_SIZE, "normal"))
+
+# Car stuff
+car = turtle.Turtle()
+car.shape("square")
+car.color(random.choice(["blue", "red", "yellow", "pink", "purple", "brown"]))
+car.penup()
+car.setheading(180)
+car.goto(random.randint(-WIDTH // 2, WIDTH // 2), random.randint(-HEIGHT // 2, HEIGHT // 2))
+turtle.listen()
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# Functions to controll our turtle
+def move_left():
+    gracz.left(10)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def move_forward():
+    global speed
+    speed += 1
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+def move_backward():
+    global speed
+    speed -= 1
+
+
+def move_right():
+    gracz.right(10)
+
+
+# methods to async control our turtle/ binding
+turtle.onkey(move_left, "Left")
+turtle.onkey(move_forward, "Up")
+turtle.onkey(move_backward, "Down")
+turtle.onkey(move_right, "Right")
+
+# while loop for movement and changes
+while True:
+    gracz.forward(speed)
+
