@@ -3,90 +3,110 @@ import random
 import time
 
 LEVEL_INCREMENT = 1
-START_Y = -250  # Start
+start_position = {"x": 0, "y": -300}
 FINISH_Y = 250  # End
 FONT_SIZE = 20  # Font size
 BGCOLOR = "white"
-speed = 1
-
+car_speed = 1
+level = 1
 # set screen size
 HEIGHT = 500
 WIDTH = 600
-
-
-
+just_move = True
 # Set up Screen
 screen = turtle.Screen()
 screen.screensize(WIDTH, HEIGHT, BGCOLOR)
 screen.title("Przeprowadź żółwia przez ulicę")
 
 # draw the borders
-mypen = turtle.Turtle()
-mypen.penup()
-mypen.setposition(-450, -380)
-mypen.down()
-mypen.pensize(3)
+border_pen = turtle.Turtle()
+border_pen.speed(0)
+border_pen.color("black")
+border_pen.penup()
+border_pen.setposition(-450, -380)
+border_pen.down()
+border_pen.pensize(3)
 for side in range(4):
     if side % 2 == 0:
-        mypen.forward(900)
+        border_pen.forward(900)
     else:
-        mypen.forward(760)
-    mypen.left(90)
+        border_pen.forward(760)
+    border_pen.left(90)
+border_pen.hideturtle()
 
 gracz = turtle.Turtle()
 gracz.shape("turtle")
+gracz.speed(0)
 gracz.color("green")
 gracz.penup()
-gracz.right(-90)
-gracz.goto(0, START_Y)
+gracz.setposition(start_position["x"], start_position["y"])
+gracz.setheading(90)
 
 # Set turtle on the starting point
-napis = turtle.Turtle()
-napis.hideturtle()
-napis.penup()
-napis.goto(-250, HEIGHT / 2 - FONT_SIZE - 5)
-napis.write("Level 1", align="right", font=("Arial", FONT_SIZE, "normal"))
+inscription = turtle.Turtle()
+inscription.speed(0)
+inscription.hideturtle()
+inscription.penup()
+inscription.setposition(-350, 350)
+inscription.write(f"Level {level}", align="right", font=("Arial", FONT_SIZE, "normal"))
+
+
 
 # Car stuff
-car = turtle.Turtle()
-car.shape("square")
-car.color(random.choice(["blue", "red", "yellow", "pink", "purple", "brown"]))
-car.penup()
-car.setheading(180)
-car.goto(random.randint(-WIDTH // 2, WIDTH // 2), random.randint(-HEIGHT // 2, HEIGHT // 2))
-turtle.listen()
+def make_car():
+    car = turtle.Turtle()
+    car.hideturtle()
+    car.shape("square")
+    car.speed(0)
+    car.color(random.choice(["blue", "red", "pink", "purple", "brown"]))
+    car.penup()
+    car.setheading(180)
+    car.setposition(random.randint(-WIDTH // 2, WIDTH // 2), random.randint(-HEIGHT // 2, HEIGHT // 2))
+    car.showturtle()
+    return car
 
 
-# Functions to controll our turtle
-def move_left():
-    gracz.left(10)
+cars= []
+for _ in range(10):
+    cars.append(make_car())
+    time.sleep(0.001)
 
+def update_level():
+    global level, just_move, car_speed
+    just_move = False
+    level += 1
+    car_speed = level
+    gracz.hideturtle()
+    gracz.setposition(start_position['x'], start_position['y'])
+    gracz.showturtle()
+    inscription.write(f"Level {level}", align="right", font=("Arial", FONT_SIZE, "normal"))
+    just_move = True
 
 def move_forward():
-    global speed
-    speed += 1
+    global just_move
+    x = gracz.ycor()
+    x += 20
+    gracz.sety(x)
+    print(gracz.ycor())
+    if x > 350:
+
+        update_level()
+        just_move = True
+    screen.update()
 
 
-def move_backward():
-    global speed
-    speed -= 1
+def car_move(car):
+    global car_speed
+    x = car.xcor()
+    x -= car_speed
+    car.setx(x)
+    screen.update()
 
 
-def move_right():
-    gracz.right(10)
+turtle.listen()
 
-
-# methods to async control our turtle/ binding
-turtle.onkey(move_left, "Left")
-turtle.onkey(move_forward, "Up")
-turtle.onkey(move_backward, "Down")
-turtle.onkey(move_right, "Right")
-
-# while loop for movement and changes
+if just_move:
+    turtle.onkey(move_forward, "Up")
 while True:
-    gracz.forward(speed)
-
-    if gracz.xcor() < -450 or gracz.xcor() > 450:
-        gracz.right(90)
-    if gracz.ycor() < -380 or gracz.ycor() > 380:
-        gracz.right(90)
+    for car in cars:
+        car_move(car)
