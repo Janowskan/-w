@@ -6,7 +6,7 @@ LEVEL_INCREMENT = 1
 START_Y = -250 #początek drogi żółwia
 FINISH_Y = 250 # koniec drogi żółwia
 FONT_SIZE = 20 #rozmiar czcionki
-
+CAR_GAP = 100
 
 # Inicjalizacja ekranu i obiektów
 screen = turtle.Screen()
@@ -34,3 +34,20 @@ car = turtle.Turtle()
     car.penup()
     car.setheading(180)
     car.goto(random.randint(-WIDTH//2, WIDTH//2), random.randint(-HEIGHT//2, HEIGHT//2))
+
+
+def create_cars():
+    cars = []
+    for i in range(-280, 300, CAR_GAP):
+        car = turtle.Turtle()
+        car.shape('square')
+        car.color(random.choice(CAR_COLORS))
+        car.penup()
+        car.setpos(i, random.randint(-240, 240))
+        car.speed(random.choice(CAR_SPEEDS))
+        cars.append(car)
+    return cars
+    
+    
+    
+    
