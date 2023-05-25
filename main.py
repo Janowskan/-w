@@ -51,9 +51,9 @@ inscription.setposition(-350, 350)
 inscription.write(f"Level {level}", align="right", font=("Arial", FONT_SIZE, "normal"))
 
 
-
 # Car stuff
-def make_car():
+def make_car(x=-1000, y=-1000):
+    global car_speed
     car = turtle.Turtle()
     car.hideturtle()
     car.shape("square")
@@ -63,13 +63,15 @@ def make_car():
     car.setheading(180)
     car.setposition(random.randint(-WIDTH // 2, WIDTH // 2), random.randint(-HEIGHT // 2, HEIGHT // 2))
     car.showturtle()
+    car.speed(car_speed)
     return car
 
 
-cars= []
-for _ in range(10):
+cars = []
+for _ in range(40):
     cars.append(make_car())
     time.sleep(0.001)
+
 
 def update_level():
     global level, just_move, car_speed
@@ -79,8 +81,10 @@ def update_level():
     gracz.hideturtle()
     gracz.setposition(start_position['x'], start_position['y'])
     gracz.showturtle()
+    inscription.clear()
     inscription.write(f"Level {level}", align="right", font=("Arial", FONT_SIZE, "normal"))
     just_move = True
+
 
 def move_forward():
     global just_move
@@ -89,9 +93,7 @@ def move_forward():
     gracz.sety(x)
     print(gracz.ycor())
     if x > 350:
-
         update_level()
-        just_move = True
     screen.update()
 
 
@@ -99,7 +101,14 @@ def car_move(car):
     global car_speed
     x = car.xcor()
     x -= car_speed
-    car.setx(x)
+    if x < -350:
+        car.hideturtle()
+        car.speed(0)
+        car.setx(300)
+        car.speed(car_speed)
+        car.showturtle()
+    else:
+        car.setx(x)
     screen.update()
 
 
