@@ -110,3 +110,4 @@ if just_move:
 while True:
     for car in cars:
         car_move(car)
+#main
