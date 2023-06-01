@@ -77,7 +77,7 @@ def update_level():
     global level, just_move, car_speed
     just_move = False
     level += 1
-    car_speed = level
+    car_speed = level * 4
     gracz.hideturtle()
     gracz.setposition(start_position['x'], start_position['y'])
     gracz.showturtle()
